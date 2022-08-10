@@ -46,6 +46,9 @@ FUNC_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-1
 
 get_file $FIFT_URL "fift"
 get_file $FUNC_URL "func"
+get_file https://github.com/ton-defi-org/ton-binaries/releases/download/fiftlib/fiftlib.zip fiftlib.zip
+unzip fiftlib.zip
+rm fiftlib.zip
 # get_file $LITE_CLIENT_URL "lite-client"
 
 chmod +x fift func #lite-client
@@ -53,5 +56,6 @@ chmod +x fift func #lite-client
 PROFILE_PATH="$BUILD_DIR/.profile.d/ton.sh"
 mkdir -p $(dirname $PROFILE_PATH)
 echo 'export PATH="$PATH:${HOME}/vendor/ton"' >> $PROFILE_PATH
+echo 'export FIFTPATH="$PATH:${HOME}/vendor/ton"' >> $PROFILE_PATH
 
 echo "Installation successful" | output
