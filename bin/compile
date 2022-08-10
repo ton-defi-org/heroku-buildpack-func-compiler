@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+header() {
+  echo "" || true
+  echo "-----> $*" || true
+}
+
+output() {
+  while IFS= read -r LINE; do
+    # do not indent headers that are being piped through the output
+    if [[ "$LINE" =~ ^-----\>.* ]]; then
+      echo "$LINE" || true
+    else
+      echo "       $LINE" || true
+    fi
+  done
+}
+
+header "Installing func, fift, lite-client"
+
+BUILD_DIR=${1:-}
+VENDOR_DIR="vendor"
+
+cd $BUILD_DIR
+mkdir -p $VENDOR_DIR
+cd $VENDOR_DIR
+mkdir -p ton
+cd ton
+
+#echo "Querying releases" | output
+#RELEASES=$(curl "https://api.github.com/repos/ton-defi-org/ton-binaries/releases" -s -L --silent --fail --retry 5 --retry-max-time 15)
+echo "DONE" | output
+
+get_file() {
+  echo "Downloading $1" | output
+  code=$(curl -s -L --silent --fail --retry 5 --retry-max-time 15 --write-out "%{http_code}" $1 -o "./$2")
+  if [ "$code" != "200" ]; then
+    echo "Unable to download $1: $code" | output && exit 1
+  fi
+}
+
+FIFT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/fift # $(echo $RELEASES | grep "browser_download.*ubuntu-18.*fift" | cut -d : -f 2,3 | tr -d \")
+FUNC_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/func #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
+LITE_CLIENT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/lite-client #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*lite-client" | cut -d : -f 2,3 | tr -d \")
+
+get_file $FIFT_URL "fift"
+get_file $FUNC_URL "func"
+get_file $LITE_CLIENT_URL "lite-client"
+
+PROFILE_PATH="$BUILD_DIR/.profile.d/ton.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="$PATH:${HOME}/vendor/ton"' >> $PROFILE_PATH
+
+echo "Installation successful" | output
