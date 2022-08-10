@@ -42,11 +42,13 @@ get_file() {
 
 FIFT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/fift # $(echo $RELEASES | grep "browser_download.*ubuntu-18.*fift" | cut -d : -f 2,3 | tr -d \")
 FUNC_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/func #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
-LITE_CLIENT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/lite-client #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*lite-client" | cut -d : -f 2,3 | tr -d \")
+# LITE_CLIENT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/lite-client #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*lite-client" | cut -d : -f 2,3 | tr -d \")
 
 get_file $FIFT_URL "fift"
 get_file $FUNC_URL "func"
-get_file $LITE_CLIENT_URL "lite-client"
+# get_file $LITE_CLIENT_URL "lite-client"
+
+chmod +x fift func #lite-client
 
 PROFILE_PATH="$BUILD_DIR/.profile.d/ton.sh"
 mkdir -p $(dirname $PROFILE_PATH)
