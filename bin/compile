@@ -42,7 +42,7 @@ get_file() {
 
 FIFT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/fift # $(echo $RELEASES | grep "browser_download.*ubuntu-18.*fift" | cut -d : -f 2,3 | tr -d \")
 FUNC_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/func #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
-FUNC_0_3_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/func #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
+FUNC_0_3_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/func0.3.0 #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
 # LITE_CLIENT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18/lite-client #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*lite-client" | cut -d : -f 2,3 | tr -d \")
 
 get_file $FIFT_URL "fift"
