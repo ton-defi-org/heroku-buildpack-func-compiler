@@ -20,13 +20,11 @@ output() {
 header "Installing func, fift, lite-client"
 
 BUILD_DIR=${1:-}
-VENDOR_DIR="vendor"
+RESOURCES_DIR="resources"
 
 cd $BUILD_DIR
-mkdir -p $VENDOR_DIR
-cd $VENDOR_DIR
-mkdir -p ton
-cd ton
+mkdir -p $RESOURCES_DIR
+cd $RESOURCES_DIR
 
 #echo "Querying releases" | output
 #RELEASES=$(curl "https://api.github.com/repos/ton-defi-org/ton-binaries/releases" -s -L --silent --fail --retry 5 --retry-max-time 15)
@@ -40,22 +38,27 @@ get_file() {
   fi
 }
 
-FIFT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.3.0/fift # $(echo $RELEASES | grep "browser_download.*ubuntu-18.*fift" | cut -d : -f 2,3 | tr -d \")
-FUNC_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.3.0/func #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*func" | cut -d : -f 2,3 | tr -d \")
-# LITE_CLIENT_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.3.0/lite-client #$(echo $RELEASES | grep "browser_download.*ubuntu-18.*lite-client" | cut -d : -f 2,3 | tr -d \")
+FIFT_0_3_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.3.0/fift # $(echo $RELEASES | grep "browser_download.*ubuntu-18.*fift" | cut -d : -f 2,3 | tr -d \")
+FUNC_0_3_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.3.0/func 
+FIFT_0_2_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.2.0/fift 
+FUNC_0_2_0_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-0.2.0/func 
 
-get_file $FIFT_URL "fift"
-get_file $FUNC_URL "func"
+mkdir -p binaries/0.2.0 binaries/0.3.0 fiftlib
+
+get_file $FIFT_0_3_0_URL "binaries/0.3.0/fift"
+get_file $FUNC_0_3_0_URL "binaries/0.3.0/func"
+get_file $FIFT_0_2_0_URL "binaries/0.2.0/fift"
+get_file $FUNC_0_2_0_URL "binaries/0.2.0/func"
+chmod +x "binaries/0.3.0/fift" "binaries/0.3.0/func" "binaries/0.2.0/fift" "binaries/0.2.0/func"
+
+cd fiftlib
 get_file https://github.com/ton-defi-org/ton-binaries/releases/download/fiftlib/fiftlib.zip fiftlib.zip
 unzip fiftlib.zip
 rm fiftlib.zip
-# get_file $LITE_CLIENT_URL "lite-client"
-
-chmod +x fift func #lite-client
 
 PROFILE_PATH="$BUILD_DIR/.profile.d/ton.sh"
 mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:${HOME}/vendor/ton"' >> $PROFILE_PATH
-echo 'export FIFTPATH="$PATH:${HOME}/vendor/ton"' >> $PROFILE_PATH
+echo 'export TON_BINARIES_PATH="${HOME}/binaries"' >> $PROFILE_PATH
+echo 'export FIFTPATH="$PATH:${HOME}/binaries"' >> $PROFILE_PATH
 
 echo "Installation successful" | output
