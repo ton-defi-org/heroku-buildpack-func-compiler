@@ -1,8 +1,8 @@
-name: Test
+name: pull_req
 on:
-  push:
-  schedule:
-    - cron: '*/5 * * * *'
+  pull_request:
+    branches:
+      ["main"]
 jobs:
   build:
     runs-on: ubuntu-latest
