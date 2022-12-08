@@ -1,0 +1,13 @@
+name: pull_req
+on:
+  pull_request:
+    branches:
+      ["main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./bin/detect
+    - run: ./bin/compile $PWD
+    - run: ./bin/release
