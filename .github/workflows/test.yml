@@ -3,9 +3,6 @@ on:
   pull_request:
     branches:
       ["main"]
-  push:
-  schedule:
-    - cron: '*/5 * * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
