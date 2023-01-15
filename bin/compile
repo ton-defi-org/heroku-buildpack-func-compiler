@@ -17,7 +17,7 @@ output() {
   done
 }
 
-header "Installing func, fift, lite-client"
+header "Installing func, fift"
 
 BUILD_DIR=${1:-}
 RESOURCES_DIR="resources"
@@ -38,8 +38,8 @@ get_file() {
   fi
 }
 
-BASE_RELEASE_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-18-
-RELEASES=(0.2.0 0.3.0)
+BASE_RELEASE_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-22-
+RELEASES=(0.2.0 0.3.0 0.4.0)
 
 for release in ${RELEASES[@]}; do
   # $release
