@@ -39,7 +39,8 @@ get_file() {
 }
 
 BASE_RELEASE_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-22-
-RELEASES=(0.2.0 0.3.0 0.4.0 0.4.1)
+RELEASES_URL=https://raw.githubusercontent.com/ton-community/contract-verifier-config/main/config.json
+RELEASES=$(curl -s $RELEASES_URL | grep -oP '(?<="funcVersions":\s)\[[^\]]+\]' | sed 's/"//g; s/,//g; s/\[//; s/\]//' | tr ' ' '\n')
 
 for release in ${RELEASES[@]}; do
   # $release
