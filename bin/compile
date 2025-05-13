@@ -34,8 +34,10 @@ get_file() {
   echo "Downloading $1" | output
   code=$(curl -s -L --silent --fail --retry 5 --retry-max-time 15 --write-out "%{http_code}" $1 -o "./$2")
   if [ "$code" != "200" ]; then
-    echo "Unable to download $1: $code" | output && exit 1
+    echo "Warning: Unable to download $1 (HTTP $code). Skipping." | output
+    return 1
   fi
+  return 0
 }
 
 BASE_RELEASE_URL=https://github.com/ton-defi-org/ton-binaries/releases/download/ubuntu-22-
@@ -43,16 +45,21 @@ RELEASES_URL=https://raw.githubusercontent.com/ton-community/contract-verifier-c
 RELEASES=$(curl -s $RELEASES_URL | grep -oP '(?<="funcVersions":\s)\[[^\]]+\]' | sed 's/"//g; s/,//g; s/\[//; s/\]//' | tr ' ' '\n')
 
 for release in ${RELEASES[@]}; do
-  # $release
   mkdir -p binaries/$release/fiftlib
-  get_file $BASE_RELEASE_URL$release/fift "binaries/$release/fift"
-  get_file $BASE_RELEASE_URL$release/func "binaries/$release/func"
-  get_file $BASE_RELEASE_URL$release/fiftlib.zip "binaries/$release/fiftlib.zip"
-  chmod +x "binaries/$release/fift" "binaries/$release/func"
-  cd "binaries/$release/fiftlib"
-  unzip ../fiftlib.zip
-  rm ../fiftlib.zip
-  cd ../../..
+
+  if get_file "$BASE_RELEASE_URL$release/fift" "binaries/$release/fift" &&
+     get_file "$BASE_RELEASE_URL$release/func" "binaries/$release/func" &&
+     get_file "$BASE_RELEASE_URL$release/fiftlib.zip" "binaries/$release/fiftlib.zip"; then
+
+    chmod +x "binaries/$release/fift" "binaries/$release/func"
+    cd "binaries/$release/fiftlib"
+    unzip ../fiftlib.zip
+    rm ../fiftlib.zip
+    cd ../../..
+  else
+    echo "Skipping release $release due to missing files." | output
+    rm -rf "binaries/$release"
+  fi
 done
 
 PROFILE_PATH="$BUILD_DIR/.profile.d/ton.sh"
