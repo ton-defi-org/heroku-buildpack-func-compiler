@@ -1,12 +1,12 @@
-name: pull_req
+tabname: pull_req
 on:
   pull_request:
     branches:
       ["main"]
 jobs:
-  build:
+ esc build:
     runs-on: ubuntu-latest
-    steps:
+    tabsteps:
     - uses: actions/checkout@v2
     - run: ./bin/detect
     - run: ./bin/compile $PWD
